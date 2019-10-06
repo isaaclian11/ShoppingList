@@ -82,12 +82,14 @@ public class ShoppingList extends Fragment implements ShoppingListRecyclerViewAd
             @Override
             public void onClick(View view) {
                 String item = editText.getText().toString();
+                if(item.isEmpty())
+                    return;
                 ShoppingListModel shoppingListModel = new ShoppingListModel(finalId, item);
                 editText.getText().clear();
                 items.add(shoppingListModel);
                 globalItem.add(shoppingListModel);
                 adapter.notifyDataSetChanged();
-                saveState(view.getContext(), filename);
+                saveState(view.getContext(), filename, globalItem);
 
                 //This closes the keyboard after button is pressed
                 InputMethodManager inputManager = (InputMethodManager)
@@ -109,7 +111,7 @@ public class ShoppingList extends Fragment implements ShoppingListRecyclerViewAd
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
     }
 
-    public void saveState(Context context, String filename) {
+    public void saveState(Context context, String filename, ArrayList<ShoppingListModel> globalItem) {
         FileOutputStream fos;
         ObjectOutputStream oos;
 
@@ -125,7 +127,7 @@ public class ShoppingList extends Fragment implements ShoppingListRecyclerViewAd
         }
     }
 
-    public void loadFromFile(Context context, String filename) {
+    public ArrayList<ShoppingListModel> loadFromFile(Context context, String filename) {
         FileInputStream fos;
         ObjectInputStream oos;
 
@@ -138,6 +140,7 @@ public class ShoppingList extends Fragment implements ShoppingListRecyclerViewAd
         } catch(Exception e) {
             Log.d("Model", "Exception on loading", e);
         }
+        return globalItem;
     }
 
     @Override
@@ -148,7 +151,7 @@ public class ShoppingList extends Fragment implements ShoppingListRecyclerViewAd
                 globalItem.remove(i);
         }
         items.remove(position);
-        saveState(getContext(), filename);
+        saveState(getContext(), filename, globalItem);
         adapter.notifyDataSetChanged();
     }
 }

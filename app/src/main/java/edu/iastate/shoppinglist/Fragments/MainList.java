@@ -40,9 +40,13 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
     private final String key = "parent_id";
     private final String titleKey = "title";
     private final String filename = "main_list";
+    private final String globalItemList = "item_list";
+
 
     ImageView floatingActionButton;
     private ArrayList<MainListModel> titles = new ArrayList<>();
+    private ArrayList<ShoppingListModel> globalItems = new ArrayList<>();
+
     RecyclerView recyclerView;
     MainListReyclerViewAdapter adapter;
     EditText editText;
@@ -65,6 +69,8 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
             @Override
             public void onClick(View view) {
                 String title = editText.getText().toString();
+                if(title.isEmpty())
+                    return;
                 UUID id = UUID.randomUUID();
                 titles.add(new MainListModel(id, title));
                 saveState(view.getContext(), filename);
@@ -107,8 +113,16 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
 
     @Override
     public void onDeleteClick(int position) {
+        ShoppingList shoppingList = new ShoppingList();
+        globalItems = shoppingList.loadFromFile(getContext(), globalItemList);
+        for(int i=0; i<globalItems.size(); i++){
+            if(globalItems.get(i).getParentID().equals(titles.get(position).getId())){
+                globalItems.remove(i);
+            }
+        }
         titles.remove(position);
         adapter.notifyDataSetChanged();
+        shoppingList.saveState(getContext(), globalItemList, globalItems);
         saveState(getContext(), filename);
     }
 
