@@ -19,7 +19,7 @@ public class ShoppingListModel implements Serializable {
 
     /**
      * Returns the id of the shopping list
-     * @return
+     * @return Returns the id of the shopping list
      */
     public UUID getId() {
         return id;
@@ -27,7 +27,7 @@ public class ShoppingListModel implements Serializable {
 
     /**
      * Returns the name of the shopping list
-     * @return
+     * @return Returns the name of the shopping list
      */
     public String getTitle() {
         return title;
