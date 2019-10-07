@@ -126,8 +126,23 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
      * Custom interface to handle different clicks
      */
     public interface OnMainListListener{
+        /**
+         * Opens a list of items corresponding to this list
+         * @param position Position of the list clicked
+         * @param view
+         */
         void onMainListClick(int position, View view);
+
+        /**
+         * Deletes a shopping list and all its children
+         * @param position Position of the list clicked
+         */
         void onDeleteClick(int position);
+
+        /**
+         * Duplicates a list
+         * @param position Position of the list clicked
+         */
         void duplicateClick(int position);
     }
 

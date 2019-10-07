@@ -103,6 +103,10 @@ public class ItemListRecyclerViewAdapter extends RecyclerView.Adapter<ItemListRe
      * on a list
      */
     public interface OnShoppingListDeleteListener{
+        /**
+         * Deletes an item from a list
+         * @param position Position of the item to be deleted
+         */
         void onDeleteClick(int position);
     }
 
