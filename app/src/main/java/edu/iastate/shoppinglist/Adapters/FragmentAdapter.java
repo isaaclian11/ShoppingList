@@ -11,7 +11,6 @@ import java.util.List;
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> mFragments = new ArrayList<>();
-    private final List<String> mTitles = new ArrayList<>();
 
     /**
      * Constructor for fragment adapter

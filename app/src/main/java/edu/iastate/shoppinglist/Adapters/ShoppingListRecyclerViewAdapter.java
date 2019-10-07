@@ -20,7 +20,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
     private static final String TAG = "ShoppingListAdapter";
     private OnShoppingListDeleteListener listener;
 
-    private ArrayList<ShoppingListModel> mItems = new ArrayList<>();
+    private ArrayList<ShoppingListModel> mItems;
 
     /**
      * Constructor for a shopping list recyclerview

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import edu.iastate.shoppinglist.Models.MainListModel;
 import edu.iastate.shoppinglist.R;
