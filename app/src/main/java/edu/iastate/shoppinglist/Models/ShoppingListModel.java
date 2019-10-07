@@ -4,20 +4,33 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class ShoppingListModel implements Serializable {
+    private UUID id;
+    private String title;
 
-    private UUID parentID;
-    private String item;
-
-    public ShoppingListModel(UUID parentID, String item) {
-        this.parentID = parentID;
-        this.item = item;
+    /**
+     * Constructor of this model
+     * @param id id of the shopping list
+     * @param title name of the shopping list
+     */
+    public ShoppingListModel(UUID id, String title) {
+        this.id = id;
+        this.title = title;
     }
 
-    public UUID getParentID() {
-        return parentID;
+    /**
+     * Returns the id of the shopping list
+     * @return
+     */
+    public UUID getId() {
+        return id;
     }
 
-    public String getItem() {
-        return item;
+    /**
+     * Returns the name of the shopping list
+     * @return
+     */
+    public String getTitle() {
+        return title;
     }
+
 }

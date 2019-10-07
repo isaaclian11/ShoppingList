@@ -17,72 +17,118 @@ import edu.iastate.shoppinglist.R;
 
 public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<ShoppingListRecyclerViewAdapter.ViewHolder>{
 
-    private static final String TAG = "ShoppingListAdapter";
-    private OnShoppingListDeleteListener listener;
+    private static final String TAG = "MainListAdapter";
 
-    private ArrayList<ShoppingListModel> mItems;
+    private ArrayList<ShoppingListModel> mTitles; //A list of shopping lists
+    private OnMainListListener mOnMainListListener; //An interface to handle clicks
 
     /**
-     * Constructor for a shopping list recyclerview
-     * @param mItems ArrayList of single item objects
-     * @param listener Interface to handle on click
+     * Constructor for an adapter of list of ShoppingLists recyclerview
+     * @param mTitles Name of the each shopping list
+     * @param onMainListListener - Interface to handle clicks
      */
-    public ShoppingListRecyclerViewAdapter(ArrayList<ShoppingListModel> mItems,
-                                           OnShoppingListDeleteListener listener) {
-        this.mItems = mItems;
-        this.listener = listener;
+    public ShoppingListRecyclerViewAdapter(ArrayList<ShoppingListModel> mTitles, OnMainListListener onMainListListener) {
+        this.mTitles = mTitles;
+        this.mOnMainListListener = onMainListListener;
     }
 
+    /**
+     * Creates a view holder object containing a row
+     * @param parent
+     * @param viewType
+     * @return returns a ViewHolder object
+     */
     @NonNull
     @Override
-    public ShoppingListRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view, listener);
+                .inflate(R.layout.main_items, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view, mOnMainListListener);
         return viewHolder;
     }
 
+    /**
+     * Populates the list
+     * @param holder a row
+     * @param position position in the list
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: called.");
-        holder.item.setText(mItems.get(position).getItem());
+        holder.mainTitles.setText(mTitles.get(position).getTitle());
     }
 
-
+    /**
+     * Gets the size of the list
+     * @return returns the size of the list
+     */
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mTitles.size();
     }
 
+    /**
+     * Custom ViewHolder specifically for ShoppingList
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+        TextView mainTitles; //Name of the shopping list
+        OnMainListListener onMainListListener; //Interface to handle clicks
+        ImageView delete, duplicate; //Delete and duplicate images used as buttons
 
-        TextView item;
-        ImageView delete;
-        OnShoppingListDeleteListener listener;
-
-        public ViewHolder(@NonNull View itemView, final OnShoppingListDeleteListener listener) {
+        public ViewHolder(@NonNull View itemView, final OnMainListListener onMainListListener) {
             super(itemView);
-            item = itemView.findViewById(R.id.items_titles);
-            delete = itemView.findViewById(R.id.delete_item);
+            mainTitles = itemView.findViewById(R.id.main_items_titles);
+            this.onMainListListener = onMainListListener;
+            delete = itemView.findViewById(R.id.delete_list);
+            duplicate = itemView.findViewById(R.id.duplicate_list);
+
+            //Handles delete onclick. The onDeleteClick is handled in the actual fragment
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(listener!=null){
+                    if(onMainListListener!=null){
                         int position = getAdapterPosition();
                         if(position!=RecyclerView.NO_POSITION){
-                            listener.onDeleteClick(position);
+                            onMainListListener.onDeleteClick(position);
                         }
                     }
                 }
             });
-            this.listener = listener;
+
+            //Handles duplicate on click. The duplicateClick method is handled in the fragment
+            duplicate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onMainListListener!=null){
+                        int position = getAdapterPosition();
+                        if(position!=RecyclerView.NO_POSITION){
+                            onMainListListener.duplicateClick(position);
+                        }
+                    }
+                }
+            });
+            itemView.setOnClickListener(this);
         }
+
+        /**
+         * Handles clicks on the list
+         * @param view
+         */
+        @Override
+        public void onClick(View view) {
+            onMainListListener.onMainListClick(getAdapterPosition(), view);
+        }
+
     }
 
-    public interface OnShoppingListDeleteListener{
+    /**
+     * Custom interface to handle different clicks
+     */
+    public interface OnMainListListener{
+        void onMainListClick(int position, View view);
         void onDeleteClick(int position);
+        void duplicateClick(int position);
     }
-
 
 }

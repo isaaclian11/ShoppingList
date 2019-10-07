@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
-    private final List<Fragment> mFragments = new ArrayList<>();
+    private final List<Fragment> mFragments = new ArrayList<>(); //List of fragments
 
     /**
      * Constructor for fragment adapter
@@ -21,12 +21,21 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         super(fm, behavior);
     }
 
+    /**
+     * Gets a fragment from the array list
+     * @param position position of the fragment in the array list
+     * @return returns a fragment
+     */
     @NonNull
     @Override
     public Fragment getItem(int position) {
         return mFragments.get(position);
     }
 
+    /**
+     * Gets the size of the array list of fragments
+     * @return the size of the array list of fragments
+     */
     @Override
     public int getCount() {
         return mFragments.size();

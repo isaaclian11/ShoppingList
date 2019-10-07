@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.MainList">
+    tools:context=".Fragments.ShoppingList">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="120dp"
-            android:id="@+id/shoppingList"
+            android:id="@+id/itemList"
             android:text="@string/title"
             android:textSize="32sp"
             android:fontFamily="@font/montserrat_regular"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:layout_below="@+id/shoppingList"/>
+            android:layout_below="@+id/itemList"/>
 
         <LinearLayout
             android:layout_width="match_parent"
