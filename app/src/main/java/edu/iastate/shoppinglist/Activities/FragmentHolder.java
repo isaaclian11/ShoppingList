@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import java.util.UUID;
@@ -17,23 +18,14 @@ import edu.iastate.shoppinglist.Fragments.ShoppingList;
 import edu.iastate.shoppinglist.R;
 
 public class FragmentHolder extends AppCompatActivity{
-
-    private FragmentAdapter fragmentAdapter;
-    private ViewPager viewPager;
-    private final String MainListTitle = "MainList";
-    private final String ShoppingListTitle = "ShoppingList";
-    private final String idFile = "idFile";
-    private final String parent = "parentID";
-
+    MainList mainList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_holder);
-        Fragment mainList = new MainList();
-
+        mainList = new MainList();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container,mainList).commit();
     }
-
 
 }

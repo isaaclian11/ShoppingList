@@ -13,7 +13,11 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> mFragments = new ArrayList<>();
     private final List<String> mTitles = new ArrayList<>();
 
-
+    /**
+     * Constructor for fragment adapter
+     * @param fm Fragment manager
+     * @param behavior Indicates whether this fragment will be the only one to be in Resumed state
+     */
     public FragmentAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
     }
@@ -27,10 +31,5 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return mFragments.size();
-    }
-
-    public void addFragment(Fragment fm, String title){
-        mFragments.add(fm);
-        mTitles.add(title);
     }
 }

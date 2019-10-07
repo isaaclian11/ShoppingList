@@ -38,6 +38,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class MainList extends Fragment implements MainListReyclerViewAdapter.OnMainListListener {
 
     private final String key = "parent_id";
+    private final String positionKey = "position";
     private final String titleKey = "title";
     private final String filename = "main_list";
     private final String globalItemList = "item_list";
@@ -68,24 +69,27 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = editText.getText().toString();
-                if(title.isEmpty())
-                    return;
-                UUID id = UUID.randomUUID();
-                titles.add(new MainListModel(id, title));
-                saveState(view.getContext(), filename);
-                editText.getText().clear();
-                adapter.notifyDataSetChanged();
+                try {
+                    String title = editText.getText().toString();
+                    UUID id = UUID.randomUUID();
+                    titles.add(new MainListModel(id, title));
+                    saveState(view.getContext(), filename, titles);
+                    editText.getText().clear();
+                    adapter.notifyDataSetChanged();
 
-                //This closes the keyboard after button is pressed
-                InputMethodManager inputManager = (InputMethodManager)
-                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //This closes the keyboard after button is pressed
+                    InputMethodManager inputManager = (InputMethodManager)
+                            getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
+                    inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
 
         });
+
         return view;
     }
 
@@ -98,12 +102,15 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
     }
 
     @Override
-    public void onMainListClick(int position, UUID parentID, String title, View view) {
+    public void onMainListClick(int position, View view) {
 
         AppCompatActivity activity = (AppCompatActivity) view.getContext();
         Bundle bundle = new Bundle();
-        bundle.putString(key, parentID.toString());
-        bundle.putString(titleKey, title);
+        String id = titles.get(position).getId().toString();
+        String listTitle = titles.get(position).getTitle();
+        bundle.putString(key, id);
+        bundle.putString(titleKey, listTitle);
+        bundle.putInt(positionKey, position);
         Fragment shoppingList = new ShoppingList();
         shoppingList.setArguments(bundle);
         activity.getSupportFragmentManager().beginTransaction()
@@ -123,10 +130,30 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
         titles.remove(position);
         adapter.notifyDataSetChanged();
         shoppingList.saveState(getContext(), globalItemList, globalItems);
-        saveState(getContext(), filename);
+        saveState(getContext(), filename, titles);
     }
 
-    public void saveState(Context context, String filename) {
+    @Override
+    public void duplicateClick(int position) {
+        ArrayList<ShoppingListModel> duplicateList = new ArrayList<>();
+        UUID id = titles.get(position).getId();
+        UUID newID = UUID.randomUUID();
+        ShoppingList shoppingList = new ShoppingList();
+        globalItems = shoppingList.loadFromFile(getContext(), globalItemList);
+        for(int i=0; i<globalItems.size();i++){
+            if(globalItems.get(i).getParentID().equals(id)){
+                duplicateList.add(new ShoppingListModel(newID, globalItems.get(i).getItem()));
+            }
+        }
+        globalItems.addAll(duplicateList);
+        shoppingList.saveState(getContext(), globalItemList, globalItems);
+        MainListModel duplicateModel = new MainListModel(newID, titles.get(position).getTitle());
+        titles.add(duplicateModel);
+        adapter.notifyDataSetChanged();
+        saveState(getContext(), filename, titles);
+    }
+
+    public void saveState(Context context, String filename, ArrayList<MainListModel> titles) {
         FileOutputStream fos;
         ObjectOutputStream oos;
 
@@ -142,7 +169,7 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
         }
     }
 
-    public void loadFromFile(Context context, String filename) {
+    public ArrayList<MainListModel> loadFromFile(Context context, String filename) {
         FileInputStream fos;
         ObjectInputStream oos;
 
@@ -155,5 +182,6 @@ public class MainList extends Fragment implements MainListReyclerViewAdapter.OnM
         } catch(Exception e) {
             Log.d("Model", "Exception on loading", e);
         }
+        return titles;
     }
 }

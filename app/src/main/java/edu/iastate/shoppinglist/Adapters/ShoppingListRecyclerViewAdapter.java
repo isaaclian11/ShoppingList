@@ -22,9 +22,14 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
 
     private ArrayList<ShoppingListModel> mItems = new ArrayList<>();
 
-    public ShoppingListRecyclerViewAdapter(ArrayList<ShoppingListModel> mTitles,
+    /**
+     * Constructor for a shopping list recyclerview
+     * @param mItems ArrayList of single item objects
+     * @param listener Interface to handle on click
+     */
+    public ShoppingListRecyclerViewAdapter(ArrayList<ShoppingListModel> mItems,
                                            OnShoppingListDeleteListener listener) {
-        this.mItems = mTitles;
+        this.mItems = mItems;
         this.listener = listener;
     }
 
@@ -55,6 +60,7 @@ public class ShoppingListRecyclerViewAdapter extends RecyclerView.Adapter<Shoppi
         TextView item;
         ImageView delete;
         OnShoppingListDeleteListener listener;
+
         public ViewHolder(@NonNull View itemView, final OnShoppingListDeleteListener listener) {
             super(itemView);
             item = itemView.findViewById(R.id.items_titles);
